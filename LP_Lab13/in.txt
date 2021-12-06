@@ -1,0 +1,14 @@
+main{
+   describe boolean b;
+   describe str s;
+   describe ubyte p;
+   
+   give 0;
+};
+
+str function fi(str a, str b){
+			describe integer i;
+   describe str stroka;
+
+   give stroka;
+}
