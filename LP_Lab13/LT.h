@@ -3,7 +3,7 @@
 #include "Parm.h"
 #define LEXEMA_FIXSIZE 1
 #define LT_MAXSIZE 4096
-#define LT_TI_NULLIDX 0xffffff
+#define LT_TI_NULLIDX 0xffffffff
 #define LEX_BOOLEAN 't'
 #define LEX_UBYTE 't'
 #define LEX_INTEGER 't'
@@ -14,26 +14,50 @@
 #define LEX_DESCRIBE 'd'
 #define LEX_GIVE 'g'
 #define LEX_SPEAK 's'
+#define LEX_SPEAKFN 'n'
 #define LEX_SEMICOLON ';'
 #define LEX_COMMA ','
 #define LEX_LEFTBRACE '{'
 #define LEX_BRACELET '}'
 #define LEX_LEFTHESIS '('
 #define LEX_RIGHTHESIS ')'
+#define LEX_LEFTSQ '['
+#define LEX_RIGHTSQ ']'
 #define LEX_PLUS 'v'
 #define LEX_MINUS 'v'
 #define LEX_STAR 'v'
 #define LEX_DIRSLASH 'v'
+#define LEX_SHIFT 'v'
+#define LEX_CIRCUIT	'c'
+
+#define LEX_STRLEN 'k'						
+#define LEX_STRCOPY 'y'						
+#define LEX_EXP 'e'						
+#define LEX_BREAKL 'b'						
+#define LEX_RANDOM 'r'
 #define LEX_OPERATOR 'v'
 #define LEX_EQUAL '='
 #define LEX_MAIN 'm'
 namespace LT {
+	enum operations {
+		ONOT = -1,
+		OPLUS,
+		OMINUS,
+		OMUL,
+		ODIV,
+		OSHIFTL,
+		OSHIFTR,
+		OEQU,
+		ONEQU
+	};
+
 	struct Entry {
 		char lexema;                                          //лексема
 		int sn;                                               //номер строки в исходном тексте
 		int idxTI;                                            //индекс в “»
-		char vType = '`';                                     //тип
-		int priority = -1;                                    //приоритет
+		int priority;										  //приоритет
+		
+		operations ops;
 	};
 	struct LexTable
 	{
@@ -48,6 +72,6 @@ namespace LT {
 	void Add(LexTable &lextable, Entry entry);
 	Entry GetEntry(LexTable* lextable, int n);
 	void Delete(LexTable* lextable);
-	void ShowTable(LexTable lextable, Parm::PARM parm);
+	void ShowTable(LexTable lextable, std::ostream& stream_out);
 
 }

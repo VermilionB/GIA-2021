@@ -11,6 +11,6 @@ namespace Lex {
 		LT::LexTable lextable;
 	};
 
-	LEX LexAnalyze(Log::LOG log, In::IN in);
+	LEX LexAnalyze(Log::LOG log, In::IN in, std::stack<std::string>& libraries);
 	void Synchronize(Lex::LEX& lex);
 }

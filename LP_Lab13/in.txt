@@ -1,14 +1,8 @@
+#uselib_math
+
 main{
-   describe boolean b;
-   describe str s;
-   describe ubyte p;
-   
-   give 0;
+   describe ubyte res;
+   res = 1 + 2;
+   speak res;
+   give res;
 };
-
-str function fi(str a, str b){
-			describe integer i;
-   describe str stroka;
-
-   give stroka;
-}

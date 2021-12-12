@@ -37,8 +37,7 @@ namespace LT {
 		return entry;
 	}
 
-	void ShowTable(LexTable lextable, Parm::PARM parm) {
-		ofstream out(parm.out);
+	void ShowTable(LexTable lextable, std::ostream& out) {
 		int line = 2;
 		out << "0001| ";
 		for (int i = 0; i < lextable.size; i++) {
@@ -59,6 +58,5 @@ namespace LT {
 			}
 			else out << lextable.table[i].lexema;
 		}
-		out.close();
 	}
 }

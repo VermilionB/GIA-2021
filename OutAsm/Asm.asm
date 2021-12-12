@@ -16,42 +16,27 @@ EXTRN StrOutLn: proc
 .stack 4096
 
 .const
-	Lit1 BYTE 3
-	Lit2 BYTE 5
-	Lit3 DWORD "a", 0
+	Lit1 BYTE 1
+	Lit2 BYTE 2
 
 .data
 	buffer BYTE 256 dup(0)
-	mainf BYTE 0
-	fima DWORD ?
+	mainres BYTE 0
 
 .code
 
 main PROC
-	push mainf
-	pop mainf
-	push mainf
+	push mainres
 	pop eax
 	pop ebx
 	add eax, ebx
 	push eax
-	pop mainf
-	push mainf
+	pop mainres
+	push mainres
 	call IntOut
-	push mainf
+	push mainres
 		jmp theend
 theend:
 	call ExitProcess
 main ENDP
-end mainfia : DWORD, fib : DWORD
-	push Lit2
-	pop fima
-	push fima
-	jmp local0
-		jmp theend
-local0:
-	pop eax
-	ret
-	ret
- ENDP
-
+end main

@@ -1,0 +1,5 @@
+// Файлы указаний помогают среде IDE Visual Studio интерпретировать идентификаторы Visual C++
+// (например, имена функций и макросов).
+// Дополнительные сведения: https://go.microsoft.com/fwlink/?linkid=865984
+#define FST_SHIFTR 3, NODE(1, RELATION('>', 1)), NODE(1, RELATION('>', 2)), NODE()
+#define PLUS

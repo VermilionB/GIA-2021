@@ -28,6 +28,8 @@ using namespace fst;
 	NODE(1, RELATION('g', 1)), NODE(1, RELATION('i', 2)), NODE(1, RELATION('v', 3)), NODE(1, RELATION('e', 4)), NODE()
 #define FST_SPEAK 6, \
 	NODE(1, RELATION('s', 1)), NODE(1, RELATION('p', 2)), NODE(1, RELATION('e', 3)), NODE(1, RELATION('a', 4)), NODE(1, RELATION('k', 5)), NODE()
+#define FST_SPEAKFN 8, \
+	NODE(1, RELATION('s', 1)), NODE(1, RELATION('p', 2)), NODE(1, RELATION('e', 3)), NODE(1, RELATION('a', 4)), NODE(1, RELATION('k', 5)), NODE(1, RELATION('f', 6)), NODE(1, RELATION('n', 7)), NODE()
 #define FST_ID 1,	\
 	NODE(26,	\
 	RELATION('a', 0), RELATION('b', 0), RELATION('c', 0), RELATION('d', 0), RELATION('e', 0), RELATION('f', 0),\
@@ -36,7 +38,7 @@ using namespace fst;
 	RELATION('s', 0), RELATION('t', 0), RELATION('u', 0), RELATION('v', 0), RELATION('w', 0), RELATION('x', 0),\
 	RELATION('y', 0), RELATION('z', 0))
 
-#define FST_INTLIT 1,	\
+#define FST_UBYTELIT 1,	\
 	NODE(10,	\
 	RELATION('1', 0), RELATION('2', 0), RELATION('3', 0), RELATION('4', 0), RELATION('5', 0),\
     RELATION('6', 0), RELATION('7', 0), RELATION('8', 0), RELATION('9', 0), RELATION('0', 0))
@@ -125,6 +127,14 @@ using namespace fst;
 	NODE(1, RELATION('}', 1)),\
 	NODE()
 
+#define FST_LEFTSQ 2,	\
+	NODE(1, RELATION('[', 1)),\
+	NODE()
+
+#define FST_RIGHTSQ 2,	\
+	NODE(1, RELATION(']', 1)),\
+	NODE()
+
 #define FST_LEFTHESIS 2,	\
 	NODE(1, RELATION('(', 1)),\
 	NODE()
@@ -135,4 +145,81 @@ using namespace fst;
 
 #define FST_EQUAL 2,	\
 	NODE(1, RELATION('=', 1)),\
+	NODE()
+
+#define FST_CIRCUIT 8,	\
+	NODE(1, RELATION('c', 1)),\
+	NODE(1, RELATION('i', 2)),\
+	NODE(1, RELATION('r', 3)),\
+	NODE(1, RELATION('c', 4)),\
+	NODE(1, RELATION('u', 5)),\
+	NODE(1, RELATION('i', 6)),\
+	NODE(1, RELATION('t', 7)),\
+	NODE()
+
+#define FST_STRINGLIB 12,	\
+	NODE(1, RELATION('#', 1)),\
+	NODE(1, RELATION('u', 2)),\
+	NODE(1, RELATION('s', 3)),\
+	NODE(1, RELATION('e', 4)),\
+	NODE(1, RELATION('l', 5)),\
+	NODE(1, RELATION('i', 6)),\
+	NODE(1, RELATION('b', 7)),\
+	NODE(1, RELATION('_', 8)),\
+	NODE(1, RELATION('s', 9)),\
+	NODE(1, RELATION('t', 10)),\
+	NODE(1, RELATION('r', 11)),\
+	NODE()
+
+#define FST_STRLEN 8,	\
+	NODE(1, RELATION('_', 1)),\
+	NODE(1, RELATION('s', 2)),\
+	NODE(1, RELATION('t', 3)),\
+	NODE(1, RELATION('r', 4)),\
+	NODE(1, RELATION('l', 5)),\
+	NODE(1, RELATION('e', 6)),\
+	NODE(1, RELATION('n', 7)),\
+	NODE()
+
+#define FST_STRCOPY 9,	\
+	NODE(1, RELATION('_', 1)),\
+	NODE(1, RELATION('s', 2)),\
+	NODE(1, RELATION('t', 3)),\
+	NODE(1, RELATION('r', 4)),\
+	NODE(1, RELATION('c', 5)),\
+	NODE(1, RELATION('o', 6)),\
+	NODE(1, RELATION('p', 7)),\
+	NODE(1, RELATION('y', 8)),\
+	NODE()
+
+#define FST_MATHLIB 13,	\
+	NODE(1, RELATION('#', 1)),\
+	NODE(1, RELATION('u', 2)),\
+	NODE(1, RELATION('s', 3)),\
+	NODE(1, RELATION('e', 4)),\
+	NODE(1, RELATION('l', 5)),\
+	NODE(1, RELATION('i', 6)),\
+	NODE(1, RELATION('b', 7)),\
+	NODE(1, RELATION('_', 8)),\
+	NODE(1, RELATION('m', 9)),\
+	NODE(1, RELATION('a', 10)),\
+	NODE(1, RELATION('t', 11)),\
+	NODE(1, RELATION('h', 12)),\
+	NODE()
+
+#define FST_RANDOM 8,	\
+	NODE(1, RELATION('_', 1)),\
+	NODE(1, RELATION('r', 2)),\
+	NODE(1, RELATION('a', 3)),\
+	NODE(1, RELATION('n', 4)),\
+	NODE(1, RELATION('d', 5)),\
+	NODE(1, RELATION('o', 6)),\
+	NODE(1, RELATION('m', 7)),\
+	NODE()
+
+#define FST_EXP 5,	\
+	NODE(1, RELATION('_', 1)),\
+	NODE(1, RELATION('e', 2)),\
+	NODE(1, RELATION('x', 3)),\
+	NODE(1, RELATION('p', 4)),\
 	NODE()

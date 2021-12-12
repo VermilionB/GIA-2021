@@ -63,11 +63,6 @@ namespace IT {
 				if (idtable.table[i].iddatatype == OP) cout << "-" << " | ";
 				else cout << "ubyte" << " | ";
 				break;
-			case INT:
-				cout << setw(10) << left;
-				if (idtable.table[i].iddatatype == OP) cout << "-" << " | ";
-				else cout << "integer" << " | ";
-				break;
 			case STR:
 				cout << setw(10) << left;
 				if (idtable.table[i].idtype == OP) cout << "-" << " | ";
@@ -91,7 +86,7 @@ namespace IT {
 			}
 			cout << setw(11) << left << idtable.table[i].idxFirstLE << " | ";
 
-			if ((idtable.table[i].iddatatype == INT || idtable.table[i].iddatatype == UBYTE) && (idtable.table[i].idtype == V || idtable.table[i].idtype == L))
+			if (idtable.table[i].iddatatype == UBYTE && (idtable.table[i].idtype == V || idtable.table[i].idtype == L))
 				cout << setw(18) << left << idtable.table[i].value.vint;
 			else if (idtable.table[i].iddatatype == STR && (idtable.table[i].idtype == V || idtable.table[i].idtype == L))
 				cout << "[" << idtable.table[i].value.vstr.len << "]\"" << idtable.table[i].value.vstr.str << "\"";

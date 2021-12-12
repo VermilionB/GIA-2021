@@ -41,7 +41,8 @@ namespace Semantic {
 				do {
 					j++;
 				} while ((lex.lextable.table[j].lexema != LEX_GIVE));
-				if (lex.idtable.table[lex.lextable.table[j + 1].idxTI].iddatatype != type) {
+				int returned_v = lex.idtable.table[lex.lextable.table[j + 1].idxTI].iddatatype;
+				if (returned_v != type) {
 					Log::WriteError(log, Error::geterrorin(314, lex.lextable.table[j].sn, -1));
 					is_ok = false;
 				}

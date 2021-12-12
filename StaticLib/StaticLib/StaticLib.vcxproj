@@ -21,14 +21,13 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{695d043f-cdbf-4e94-bbaa-039daeb916f7}</ProjectGuid>
-    <RootNamespace>LPLab13</RootNamespace>
+    <ProjectGuid>{6f01a6a9-ed40-4ba6-a29c-1fdbbc544b66}</ProjectGuid>
+    <RootNamespace>StaticLib</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>GIA-2021</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -140,43 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Divide.cpp" />
-    <ClCompile Include="Error.cpp" />
-    <ClCompile Include="FST.cpp" />
-    <ClCompile Include="Generation.cpp" />
-    <ClCompile Include="GRBH.cpp" />
-    <ClCompile Include="In.cpp" />
-    <ClCompile Include="IT.cpp" />
-    <ClCompile Include="LexAnalyze.cpp" />
-    <ClCompile Include="Log.cpp" />
-    <ClCompile Include="GIA-2021.cpp" />
-    <ClCompile Include="LT.cpp" />
-    <ClCompile Include="MFST.cpp" />
-    <ClCompile Include="Parm.cpp" />
-    <ClCompile Include="Polish.cpp" />
-    <ClCompile Include="SemAnalyze.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Divide.h" />
-    <ClInclude Include="Error.h" />
-    <ClInclude Include="FST.h" />
-    <ClInclude Include="Generation.h" />
-    <ClInclude Include="GRBH.h" />
-    <ClInclude Include="In.h" />
-    <ClInclude Include="IT.h" />
-    <ClInclude Include="LexAnalyze.h" />
-    <ClInclude Include="Log.h" />
-    <ClInclude Include="LT.h" />
-    <ClInclude Include="MFST.h" />
-    <ClInclude Include="Parm.h" />
-    <ClInclude Include="Polish.h" />
-    <ClInclude Include="Regulars.h" />
-    <ClInclude Include="Rules.h" />
-    <ClInclude Include="SemAnalyze.h" />
-    <ClInclude Include="stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cpp.hint" />
+    <ClCompile Include="StaticLib.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

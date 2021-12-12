@@ -44,9 +44,10 @@
 					stack.push(lex.lextable.table[i]);
 					continue;
 				}
+			case LEX_LEFTSQ:
 				if (lex.idtable.table[lex.lextable.table[i - 1].idxTI].idtype == IT::F) {
 					// Считаем количество параметров в функции
-					for (int j = i + 1; lex.lextable.table[j].lexema != LEX_RIGHTHESIS; j++)
+					for (int j = i + 1; lex.lextable.table[j].lexema != LEX_RIGHTSQ; j++)
 						if (lex.lextable.table[j].lexema != LEX_COMMA)
 							countfuncparm_int++;
 					findFunction = true;
@@ -65,6 +66,8 @@
 					if (stack.empty())
 						return false;
 				}
+				continue;
+			case LEX_RIGHTSQ:
 				if (findFunction) {
 					queue.push(func);
 					countFuncParm.lexema += countfuncparm_int;

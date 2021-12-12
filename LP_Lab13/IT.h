@@ -10,7 +10,7 @@
 #define TI_STR_MAXSIZE 255
 
 namespace IT {
-	enum IDDATATYPE { INT = 1, STR = 2, BOOL = 3, UBYTE = 4 };
+	enum IDDATATYPE { STR = 1, BOOL = 2, UBYTE = 3 };
 	enum IDTYPE { V = 1, F = 2, P = 3, L = 4, OP = 5 };
 
 	struct Entry {
