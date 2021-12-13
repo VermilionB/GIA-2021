@@ -10,8 +10,8 @@
 #define MINUS		'-'
 #define STAR		'*'
 #define DIRSLASH	'/'
-#define SHIFTL		'<<'
-#define SHIFTR		'>>'
+#define SHIFTL		"<<"
+#define SHIFTR		">>"
 #define MORE		'>'
 #define LESS		'<'
 #define EQU			'~'
@@ -261,8 +261,8 @@ namespace Lex {
 				IT::Add(idtable, entryIT);
 				entryIT = {};
 
-				LT::Entry entryLT = WriteEntry(entryLT, LEX_LITERAL, IT::IsId(idtable, word[i]), line);
-				LT::Add(lexemTable, entryLT);
+				Entry entryLT = WriteEntry(entryLT, LEX_LITERAL, IT::IsId(idtable, word[i]), line);
+				Add(lexemTable, entryLT);
 				continue;
 			}
 
@@ -326,8 +326,6 @@ namespace Lex {
 				}
 
 				if (findSameID) continue;
-				Entry entryLT = WriteEntry(entryLT, LEX_LITERAL, indexOfId++, line);
-				Add(lexemTable, entryLT);
 				entryIT.idtype = IT::L;
 				entryIT.iddatatype = IT::UBYTE;
 				entryIT.value.vint = value;
@@ -337,6 +335,8 @@ namespace Lex {
 				word[i] = strcat(bufL, charclit);
 				strcpy(entryIT.id, word[i]);
 				IT::Add(idtable, entryIT);
+				Entry entryLT = WriteEntry(entryLT, LEX_LITERAL, IT::IsId(idtable, word[i]), line);
+				Add(lexemTable, entryLT);
 				entryIT = {};
 				continue;
 			}
@@ -359,8 +359,6 @@ namespace Lex {
 				}
 				if (findSameID) continue;
 
-				Entry entryLT = WriteEntry(entryLT, LEX_LITERAL, indexOfId++, line);
-				Add(lexemTable, entryLT);
 				strcpy(entryIT.value.vstr.str, word[i]);
 				entryIT.value.vstr.len = length - 2;
 				entryIT.idtype = IT::L;
@@ -372,6 +370,8 @@ namespace Lex {
 				nameOfLiteral = strcat(bufL, (char*)charclit);
 				strcpy(entryIT.id, nameOfLiteral);
 				IT::Add(idtable, entryIT);
+				Entry entryLT = WriteEntry(entryLT, LEX_LITERAL, IT::IsId(idtable, word[i]), line);
+				Add(lexemTable, entryLT);
 				entryIT = {};
 				continue;
 			}
@@ -394,16 +394,27 @@ namespace Lex {
 			FST shiftLeftFst(word[i], FST_SHIFTL);
 
 			if (execute(operatorFst) || execute(shiftLeftFst) || execute(shiftRightFst)) {
-				Entry entryLT = WriteEntry(entryLT, LEX_OPERATOR, indexOfId++, line);
-				switch (word[i][0]) {
-				case SHIFTL:
+				strcpy(entryIT.id, word[i]);
+				entryIT.idxFirstLE = indexOfLex;
+				entryIT.idtype = IT::OP;
+				IT::Add(idtable, entryIT);
+				Entry entryLT = WriteEntry(entryLT, LEX_OPERATOR, IT::IsId(idtable, word[i]), line);
+
+				std::map <std::string, int> mapping;
+				mapping[SHIFTL] = 1;
+				mapping[SHIFTR] = 2;
+				switch (mapping[word[i]]) {
+				case 1:
 					entryLT.priority = 0;
 					entryLT.ops = LT::operations::OSHIFTL;
 					break;
-				case SHIFTR:
+				case 2:
 					entryLT.priority = 0;
 					entryLT.ops = LT::operations::OSHIFTR;
 					break;
+				}
+				
+				switch (word[i][0]) {
 				case EQU:
 					entryLT.priority = 0;
 					entryLT.ops = LT::operations::OEQU;
@@ -426,10 +437,6 @@ namespace Lex {
 					break;
 				}
 				Add(lexemTable, entryLT);
-				strcpy(entryIT.id, word[i]);
-				entryIT.idxFirstLE = indexOfLex;
-				entryIT.idtype = IT::OP;
-				IT::Add(idtable, entryIT);
 				continue;
 			}
 

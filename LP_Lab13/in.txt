@@ -1,8 +1,13 @@
-#uselib_math
+ubyte function f[ubyte a, ubyte b]{
+    describe ubyte av;
+    av = a + b;
+    give av;
+};
 
 main{
-   describe ubyte res;
-   res = 1 + 2;
-   speak res;
-   give res;
+    describe ubyte res;
+    describe ubyte pro = 4;
+    res = pro << 2;
+    speak res;
+    give res;
 };

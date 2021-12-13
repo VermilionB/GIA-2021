@@ -44,10 +44,10 @@ int wmain(int argc, wchar_t* argv[])
 		mfst.savededucation();
 		mfst.printrules();
 
-		/*if (!Semantic::Analyze(lex, log)) {
+		if (!Semantic::Analyze(lex, log)) {
 			std::cout << "Semantic errors. Check log to get more info";
 			exit(-1);
-		}*/
+		}
 
 		IT::ShowTable(lex.idtable);
 
@@ -57,8 +57,6 @@ int wmain(int argc, wchar_t* argv[])
 		ShowTable(lex.lextable, *log.stream);
 		Gen::Generator Gener(lex.lextable, lex.idtable, parm.out, libraries);
 		Log::Close(log);
-
-
 
 	}
 	catch (Error::ERROR e)

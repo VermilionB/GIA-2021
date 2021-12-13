@@ -51,9 +51,9 @@ namespace Gen {
 			if (idT.table[i].idtype == IT::L) {
 				out << "\t" << idT.table[i].id;
 				if (idT.table[i].iddatatype == IT::STR)
-					out << " DWORD \"" << idT.table[i].value.vstr.str << "\", 0";
+					out << " BYTE \"" << idT.table[i].value.vstr.str << "\", 0";
 				if (idT.table[i].iddatatype == IT::UBYTE || idT.table[i].iddatatype == IT::BOOL)
-					out << " BYTE " << idT.table[i].value.vint;
+					out << " DD " << idT.table[i].value.vint;
 				out << "\n";
 			}
 		}
@@ -67,9 +67,9 @@ namespace Gen {
 				if (idT.table[lexT.table[i + 2].idxTI].idtype == IT::V) {
 					out << "\t" << idT.table[lexT.table[i + 2].idxTI].id;
 					if (idT.table[lexT.table[i + 2].idxTI].iddatatype == IT::STR)
-						out << " DWORD ?\n";
+						out << " BYTE ?\n";
 					if (idT.table[lexT.table[i + 2].idxTI].iddatatype == IT::UBYTE || idT.table[lexT.table[i + 2].idxTI].iddatatype == IT::BOOL)
-						out << " BYTE 0\n";
+						out << " DD 0\n";
 				}
 			}
 		}
@@ -100,18 +100,12 @@ namespace Gen {
 			switch (lexT.table[i].lexema) {
 			case LEX_FUNCTION:
 				while (lexT.table[i].lexema != LEX_RIGHTSQ) {
-					/*if (lexT.table[i].lexema == LEX_ID && idT.table[lexT.table[i].idxTI].idtype == IT::F) {
-						if (idT.table[lexT.table[i].idxTI].iddatatype == IT::PROC)
-							flag_proc = true;
-						out << (func_name = string((char*)idT.table[lexT.table[i].idxTI].id)) << " PROC ";
-					}*/
-
 					if (lexT.table[i].lexema == LEX_ID && idT.table[lexT.table[i].idxTI].idtype == IT::P) {
 						out << idT.table[lexT.table[i].idxTI].id << " : ";
 						if (idT.table[lexT.table[i].idxTI].iddatatype == IT::UBYTE || idT.table[lexT.table[i].idxTI].iddatatype == IT::BOOL)
-							out << "BYTE";
-						else
 							out << "DWORD";
+						else
+							out << "BYTE";
 					}
 
 					if (lexT.table[i].lexema == LEX_COMMA)
@@ -178,6 +172,16 @@ namespace Gen {
 						case LT::ODIV:
 							out << "\tpop ebx\n\tpop eax\n";
 							out << "\tcdq\n\tidiv ebx\n\tpush eax\n";
+							break;
+						case LT::OSHIFTL:
+							out << " \tpop eax \n ";
+							out << " \tshl eax,  " << idT.table[lexT.table[i - 1].idxTI].value.vint << "\n";
+							out << " \tpush eax \n ";
+							break;
+						case LT::OSHIFTR:
+							out << " \tpop eax \n ";
+							out << " \tshr eax,  " << idT.table[lexT.table[i - 1].idxTI].value.vint << "\n";
+							out << " \tpush eax \n ";
 							break;
 						}
 						break;
@@ -266,82 +270,19 @@ namespace Gen {
 				}
 				break;
 
-			/*case LEX_WHERE:
-				flag_if = true;
-				break;*/
-
 			case LEX_CIRCUIT:
 				flag_circuit = true;
 				flag_condition = true;
 				break;
 
-			/*case LEX_ELSE:
-				flag_else = true;
-				break;*/
-
-			case LEX_LEFTHESIS:
-				/*if (flag_if) {
-					if (idT.table[lexT.table[i + 1].idxTI].iddatatype == IT::BOOL && lexT.table[i + 2].lexema == LEX_RIGHTHESIS) {
-						out << "\tmov eax, " << idT.table[lexT.table[i + 1].idxTI].id << "\n";
-						out << "\tcmp eax, 1\n";
-						out << "\tjz m" << num_of_points << "\n";
-						out << "\tjnz m" << num_of_points + 1 << "\n";
-					}
-					else {
-						out << "\tmov eax, " << idT.table[lexT.table[i + 1].idxTI].id << "\n";
-						out << "\tcmp eax, " << idT.table[lexT.table[i + 3].idxTI].id << "\n";
-
-						if (lexT.table[i + 2].op == LT::OMORE) {
-							out << "\tjg m" << num_of_points << "\n";
-							out << "\tjl m" << num_of_points + 1 << "\n";
-						}
-						else if (lexT.table[i + 2].op == LT::OLESS) {
-							out << "\tjl m" << num_of_points << "\n";
-							out << "\tjg m" << num_of_points + 1 << "\n";
-						}
-						else if (lexT.table[i + 2].op == LT::OEQU) {
-							out << "\tjz m" << num_of_points << "\n";
-							out << "\tjnz m" << num_of_points + 1 << "\n";
-						}
-						else if (lexT.table[i + 2].op == LT::ONEQU) {
-							out << "\tjnz m" << num_of_points << "\n";
-							out << "\tjz m" << num_of_points + 1 << "\n";
-						}
-					}
-					out << "\tje m" << num_of_points + 1 << "\n";
-					int j = i;
-					while (lexT.table[j++].lexema != LEX_BRACELET) {
-						if (lexT.table[j + 1].lexema == LEX_ELSE) {
-							flag_else = true;
-							break;
-						}
-					}
-				}*/
-
+			case LEX_LEFTSQ:
 				if (flag_condition) {
-					/*if (idT.table[lexT.table[i + 1].idxTI].iddatatype == IT::BOOL && lexT.table[i + 2].lexema == LEX_RIGHTHESIS) {
-						out << "\tmov eax, " << idT.table[lexT.table[i + 1].idxTI].id << "\n";
-						out << "\tcmp eax, 1\n";
-						cycle_code = "\tmov eax, " + string((char*)idT.table[lexT.table[i + 1].idxTI].id) + "\n" +
-							"\tcmp eax, " + string((char*)idT.table[lexT.table[i + 1].idxTI].value.vint) + "\n";
-						cycle_code += "\tjz cycle" + to_string(num_of_cycles) + "\n";
-						out << "\tjz cycle" << num_of_cycles << "\n";
-					}*/
-					/*else {*/
-						cycle_code = "\tmov eax, " + string((char*)idT.table[lexT.table[i + 1].idxTI].id) + "\n" +
+					cycle_code = "\tmov eax, " + string((char*)idT.table[lexT.table[i + 1].idxTI].id) + "\n" +
 							"\tcmp eax, " + string((char*)idT.table[lexT.table[i + 3].idxTI].id) + "\n";
 						out << "\tmov eax, " << idT.table[lexT.table[i + 1].idxTI].id << "\n";
 						out << "\tcmp eax, " << idT.table[lexT.table[i + 3].idxTI].id << "\n";
 
-						/*if (lexT.table[i + 2].ops == LT::OMORE) {
-							cycle_code += "\tjg cycle" + to_string(num_of_cycles) + "\n";
-							out << "\tjg cycle" << num_of_cycles << "\n";
-						}
-						else if (lexT.table[i + 2].ops == LT::OLESS) {
-							cycle_code += "\tjl cycle" + to_string(num_of_cycles) + "\n";
-							out << "\tjl cycle" << num_of_cycles << "\n";
-						}
-						else */if (lexT.table[i + 2].ops == LT::OEQU) {
+						if (lexT.table[i + 2].ops == LT::OEQU) {
 							cycle_code += "\tjz cycle" + to_string(num_of_cycles) + "\n";
 							out << "\tjz cycle" << num_of_cycles << "\n";
 						}
@@ -349,16 +290,11 @@ namespace Gen {
 							cycle_code += "\tjnz cycle" + to_string(num_of_cycles) + "\n";
 							out << "\tjnz cycle" << num_of_cycles << "\n";
 						}
-						/*else if (lexT.table[i + 2].ops == LT::O) {
-							cycle_code += "\tjl cycle" + to_string(num_of_cycles) + "\n";
-							out << "\tjl cycle" << num_of_cycles << "\n";
-						}*/
-					/*}*/
 					out << "\tjmp cyclenext" << num_of_cycles << "\n";
 				}
 				break;
 
-			case LEX_RIGHTHESIS:
+			case LEX_RIGHTSQ:
 				if (lexT.table[i + 1].lexema == LEX_LEFTBRACE && flag_condition) {
 					out << "cycle" << num_of_cycles << ":\n";
 					flag_condition = false;
