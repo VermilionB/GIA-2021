@@ -1,4 +1,6 @@
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
 #include <Windows.h>
 #pragma warning(disable: 4996)
 
@@ -47,7 +49,7 @@ extern "C" {
 		return pow(num, exp);
 	}
 	
-	short Random(short min, short max) {
+	int Random(short min, short max) {
 		return rand() % (max - min) + min;
 	}
 }

@@ -83,7 +83,7 @@ namespace Gen {
 			num_of_cycles = 0,
 			countParm = 0;
 		string strret = string(),
-			cycle_code = string(),
+			cycle_body = string(),
 			func_name = string();
 		bool flag_function = false,
 			flag_ret = false,
@@ -100,6 +100,9 @@ namespace Gen {
 			switch (lexT.table[i].lexema) {
 			case LEX_FUNCTION:
 				while (lexT.table[i].lexema != LEX_RIGHTSQ) {
+					if (lexT.table[i].lexema == LEX_ID && idT.table[lexT.table[i].idxTI].idtype == IT::F) {
+						out << (func_name = string((char*)idT.table[lexT.table[i].idxTI].id)) << " PROC ";
+					}
 					if (lexT.table[i].lexema == LEX_ID && idT.table[lexT.table[i].idxTI].idtype == IT::P) {
 						out << idT.table[lexT.table[i].idxTI].id << " : ";
 						if (idT.table[lexT.table[i].idxTI].iddatatype == IT::UBYTE || idT.table[lexT.table[i].idxTI].iddatatype == IT::BOOL)
@@ -128,8 +131,9 @@ namespace Gen {
 					switch (lexT.table[i].lexema) {
 					case LEX_ID:
 					case LEX_LITERAL:
-						if (idT.table[lexT.table[i].idxTI].idtype == IT::F)
+						if (idT.table[lexT.table[i].idxTI].idtype == IT::F) {
 							flag_callfunction = true;
+						}
 						if (idT.table[lexT.table[i].idxTI].iddatatype == IT::UBYTE || idT.table[lexT.table[i].idxTI].iddatatype == IT::BOOL) {
 							out << "\tpush " << idT.table[lexT.table[i].idxTI].id << "\n";
 							stk.push(idT.table[lexT.table[i].idxTI].id);
@@ -240,31 +244,37 @@ namespace Gen {
 				break;
 
 			case LEX_BRACELET:
-				if (flag_body && !flag_then && !flag_function && !flag_circuit) {
+				if (flag_body && !flag_then && /*!flag_else && */!flag_function && !flag_circuit) {
 					if (flag_ret) {
 						out << "theend:\n";
 						flag_ret = false;
 					}
 					out << "\tcall ExitProcess\nmain ENDP\nend main";
 				}
-				if (flag_function && !flag_then && !flag_circuit) {
+				if (flag_function && !flag_then &&/* !flag_else &&*/ !flag_circuit) {
 					if (flag_ret) {
 						out << "local" << num_of_ret++ << ":\n";
 						out << "\tpop eax\n\tret\n";
 						flag_ret = false;
 					}
-					out << "\tret\n";
-					
 					out << func_name << " ENDP\n\n";
 					flag_function = false;
 				}
-				if (flag_then) {
+				/*if (flag_then) {
 					flag_then = false;
+					if (flag_else) {
+						out << "\tjmp e" << num_of_ends << "\n";
+						flag_else = false;
+					}
 					out << "m" << num_of_points++ << ":\n";
 				}
+				if (flag_else) {
+					flag_else = false;
+					out << "e" << num_of_ends++ << ":\n";
+				}*/
 				if (flag_circuit) {
-					out << cycle_code << "cyclenext" << num_of_cycles << ":\n";
-					cycle_code.clear();
+					out << cycle_body << "cyclenext" << num_of_cycles << ":\n";
+					cycle_body.clear();
 					num_of_cycles++;
 					flag_circuit = false;
 				}
@@ -277,17 +287,17 @@ namespace Gen {
 
 			case LEX_LEFTSQ:
 				if (flag_condition) {
-					cycle_code = "\tmov eax, " + string((char*)idT.table[lexT.table[i + 1].idxTI].id) + "\n" +
+					cycle_body = "\tmov eax, " + string((char*)idT.table[lexT.table[i + 1].idxTI].id) + "\n" +
 							"\tcmp eax, " + string((char*)idT.table[lexT.table[i + 3].idxTI].id) + "\n";
 						out << "\tmov eax, " << idT.table[lexT.table[i + 1].idxTI].id << "\n";
 						out << "\tcmp eax, " << idT.table[lexT.table[i + 3].idxTI].id << "\n";
 
 						if (lexT.table[i + 2].ops == LT::OEQU) {
-							cycle_code += "\tjz cycle" + to_string(num_of_cycles) + "\n";
+							cycle_body += "\tjz cycle" + to_string(num_of_cycles) + "\n";
 							out << "\tjz cycle" << num_of_cycles << "\n";
 						}
 						else if (lexT.table[i + 2].ops == LT::ONEQU) {
-							cycle_code += "\tjnz cycle" + to_string(num_of_cycles) + "\n";
+							cycle_body += "\tjnz cycle" + to_string(num_of_cycles) + "\n";
 							out << "\tjnz cycle" << num_of_cycles << "\n";
 						}
 					out << "\tjmp cyclenext" << num_of_cycles << "\n";
