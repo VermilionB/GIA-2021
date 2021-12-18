@@ -6,7 +6,6 @@
 #define LT_TI_NULLIDX 0xffffffff
 #define LEX_BOOLEAN 't'
 #define LEX_UBYTE 't'
-#define LEX_INTEGER 't'
 #define LEX_STR 't'
 #define LEX_ID 'i'
 #define LEX_LITERAL 'l'
@@ -29,12 +28,8 @@
 #define LEX_DIRSLASH 'v'
 #define LEX_SHIFT 'v'
 #define LEX_CIRCUIT	'c'
+#define LEX_END	'e'
 
-#define LEX_STRLEN 'k'						
-#define LEX_STRCOPY 'y'						
-#define LEX_EXP 'e'						
-#define LEX_BREAKL 'b'						
-#define LEX_RANDOM 'r'
 #define LEX_OPERATOR 'v'
 #define LEX_EQUAL '='
 #define LEX_MAIN 'm'

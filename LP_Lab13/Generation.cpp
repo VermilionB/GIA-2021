@@ -3,13 +3,13 @@
 using namespace std;
 
 namespace Gen {
-	Generator::Generator(LT::LexTable plexT, IT::IdTable pidT, wchar_t pout[], std::stack<std::string> libs)
+	Generator::Generator(LT::LexTable plexT, IT::IdTable pidT, wchar_t pout[], std::stack<std::string> libraries)
 	{
 		lexT = plexT;
 		idT = pidT;
 		out = ofstream(pout, ios_base::out);
 
-		Head(libs);
+		Head(libraries);
 		Const();
 		Data();
 		Code();
@@ -26,12 +26,12 @@ namespace Gen {
 
 		while (!libs.empty()) {
 			if (libs.top() == "math") {
-				out << "EXTRN Random: proc\n";
-				out << "EXTRN Exp: proc\n";
+				out << "EXTRN _random: proc\n";
+				out << "EXTRN _exp: proc\n";
 			}
 			else if (libs.top() == "string") {
-				out << "EXTRN StrLen: proc\n";
-				out << "EXTRN StrCopy: proc\n";
+				out << "EXTRN _strlen: proc\n";
+				out << "EXTRN _strcopy: proc\n";
 			}
 			libs.pop();
 		}
@@ -67,7 +67,7 @@ namespace Gen {
 				if (idT.table[lexT.table[i + 2].idxTI].idtype == IT::V) {
 					out << "\t" << idT.table[lexT.table[i + 2].idxTI].id;
 					if (idT.table[lexT.table[i + 2].idxTI].iddatatype == IT::STR)
-						out << " BYTE ?\n";
+						out << " DWORD ?\n";
 					if (idT.table[lexT.table[i + 2].idxTI].iddatatype == IT::UBYTE || idT.table[lexT.table[i + 2].idxTI].iddatatype == IT::BOOL)
 						out << " DD 0\n";
 				}
@@ -83,7 +83,7 @@ namespace Gen {
 			num_of_cycles = 0,
 			countParm = 0;
 		string strret = string(),
-			cycle_body = string(),
+			circuit_body = string(),
 			func_name = string();
 		bool flag_function = false,
 			flag_ret = false,
@@ -273,8 +273,8 @@ namespace Gen {
 					out << "e" << num_of_ends++ << ":\n";
 				}*/
 				if (flag_circuit) {
-					out << cycle_body << "cyclenext" << num_of_cycles << ":\n";
-					cycle_body.clear();
+					out << circuit_body << "cyclenext" << num_of_cycles << ":\n";
+					circuit_body.clear();
 					num_of_cycles++;
 					flag_circuit = false;
 				}
@@ -283,21 +283,33 @@ namespace Gen {
 			case LEX_CIRCUIT:
 				flag_circuit = true;
 				flag_condition = true;
+				out << "push " << idT.table[lexT.table[i + 2].idxTI].id << "\n";
+				out << "pop ebx\n";
+				out << circuit_body << "cyclenext" << num_of_cycles << ":\n";
+				break;
+
+			case LEX_END:
+				if (flag_circuit) {
+					out << circuit_body << "sub ebx, 1\ncmp ebx, 0\njz endcycle" << num_of_cycles << "\nloop cyclenext" << num_of_cycles << "\nendcycle" << num_of_cycles << ":\n";
+					circuit_body.clear();
+					num_of_cycles++;
+					flag_circuit = false;
+				}
 				break;
 
 			case LEX_LEFTSQ:
 				if (flag_condition) {
-					cycle_body = "\tmov eax, " + string((char*)idT.table[lexT.table[i + 1].idxTI].id) + "\n" +
+					circuit_body = "\tmov eax, " + string((char*)idT.table[lexT.table[i + 1].idxTI].id) + "\n" +
 							"\tcmp eax, " + string((char*)idT.table[lexT.table[i + 3].idxTI].id) + "\n";
 						out << "\tmov eax, " << idT.table[lexT.table[i + 1].idxTI].id << "\n";
 						out << "\tcmp eax, " << idT.table[lexT.table[i + 3].idxTI].id << "\n";
 
 						if (lexT.table[i + 2].ops == LT::OEQU) {
-							cycle_body += "\tjz cycle" + to_string(num_of_cycles) + "\n";
+							circuit_body += "\tjz cycle" + to_string(num_of_cycles) + "\n";
 							out << "\tjz cycle" << num_of_cycles << "\n";
 						}
 						else if (lexT.table[i + 2].ops == LT::ONEQU) {
-							cycle_body += "\tjnz cycle" + to_string(num_of_cycles) + "\n";
+							circuit_body += "\tjnz cycle" + to_string(num_of_cycles) + "\n";
 							out << "\tjnz cycle" << num_of_cycles << "\n";
 						}
 					out << "\tjmp cyclenext" << num_of_cycles << "\n";

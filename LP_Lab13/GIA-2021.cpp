@@ -50,6 +50,7 @@ int wmain(int argc, wchar_t* argv[])
 		}*/
 
 		IT::ShowTable(lex.idtable);
+		Synchronize(lex);
 
 		PolishStart(lex);
 		Synchronize(lex);

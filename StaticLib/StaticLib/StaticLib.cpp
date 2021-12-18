@@ -1,6 +1,5 @@
 #include <iostream>
 #include <ctime>
-#include <cstdlib>
 #include <Windows.h>
 #pragma warning(disable: 4996)
 
@@ -33,11 +32,11 @@ extern "C" {
 		std::cout << std::endl;
 	}
 
-	int StrLen(char* ptr) {
+	int _strlen(char* ptr) {
 		return strlen(ptr);
 	}
 
-	char* StrCopy(char* s1, char* s2) {
+	char* _strcopy(char* s1, char* s2) {
 		if (!s1 || !s2) {
 			std::cout << "ERROR: null string" << std::endl;
 			ExitProcess(0);
@@ -45,11 +44,12 @@ extern "C" {
 		return s2;
 	}
 
-	int Exp(short num, short exp) {
-		return pow(num, exp);
+	int _exp(short num, short exp) {
+		return pow(num, exp) < 255 ? pow(num, exp) : 255;
 	}
 	
-	int Random(short min, short max) {
+	int _random(short min, short max) {
+		srand(time(NULL));
 		return rand() % (max - min) + min;
 	}
 }

@@ -167,7 +167,7 @@ namespace Lex {
 					entryIT = {};
 				}
 				findFunction = true;
-				Entry entryLT = WriteEntry(entryLT, LEX_ID, LEX_STRCOPY, line);
+				Entry entryLT = WriteEntry(entryLT, LEX_ID, IT::IsId(idtable, word[i]), line);
 				Add(lexemTable, entryLT);
 				findFunction = false;
 
@@ -186,7 +186,7 @@ namespace Lex {
 				}
 				findFunction = true;
 
-				Entry entryLT = WriteEntry(entryLT, LEX_ID, LEX_STRLEN, line);
+				Entry entryLT = WriteEntry(entryLT, LEX_ID, IT::IsId(idtable, word[i]), line);
 				Add(lexemTable, entryLT);
 				findFunction = false;
 
@@ -206,7 +206,7 @@ namespace Lex {
 				}
 				findFunction = true;
 
-				Entry entryLT = WriteEntry(entryLT, LEX_ID, LEX_RANDOM, line);
+				Entry entryLT = WriteEntry(entryLT, LEX_ID, IT::IsId(idtable, word[i]), line);
 				Add(lexemTable, entryLT);
 				findFunction = false;
 
@@ -225,7 +225,7 @@ namespace Lex {
 				}
 				findFunction = true;
 
-				Entry entryLT = WriteEntry(entryLT, LEX_ID, LEX_EXP, line);
+				Entry entryLT = WriteEntry(entryLT, LEX_ID, IT::IsId(idtable, word[i]), line);
 				Add(lexemTable, entryLT);
 				findFunction = false;
 
@@ -306,13 +306,14 @@ namespace Lex {
 				Entry entryLT = WriteEntry(entryLT, LEX_ID, IT::IsId(idtable, word[i]), line);
 				Add(lexemTable, entryLT);
 				entryIT = { };
+				//findFunction = false;
 				continue;
 			}
 
 			FST literalUbyteFst(word[i], FST_UBYTELIT);
 			if (execute(literalUbyteFst)) {
 				int value = atoi((char*)word[i]);
-				if (value > 255) {
+				if (value > 255 || value < 0) {
 					Log::WriteError(log, Error::geterrorin(113, line, -1));
 				}
 				
@@ -370,7 +371,12 @@ namespace Lex {
 				nameOfLiteral = strcat(bufL, (char*)charclit);
 				strcpy(entryIT.id, nameOfLiteral);
 				IT::Add(idtable, entryIT);
-				Entry entryLT = WriteEntry(entryLT, LEX_LITERAL, IT::IsId(idtable, word[i]), line);
+				int k = 0;
+				for (k = 0; k < idtable.size; k++) {
+					if (!(strcmp(idtable.table[k].value.vstr.str, word[i])))
+						break;
+				}
+				Entry entryLT = WriteEntry(entryLT, LEX_LITERAL, k, line);
 				Add(lexemTable, entryLT);
 				entryIT = {};
 				continue;
@@ -405,11 +411,11 @@ namespace Lex {
 				mapping[SHIFTR] = 2;
 				switch (mapping[word[i]]) {
 				case 1:
-					entryLT.priority = 0;
+					entryLT.priority = 1;
 					entryLT.ops = LT::operations::OSHIFTL;
 					break;
 				case 2:
-					entryLT.priority = 0;
+					entryLT.priority = 1;
 					entryLT.ops = LT::operations::OSHIFTR;
 					break;
 				}
@@ -492,24 +498,24 @@ namespace Lex {
 			if (execute(leftThesisFst)) {
 				Entry entryLT = WriteEntry(entryLT, LEX_LEFTHESIS, LT_TI_NULLIDX, line);
 				entryLT.priority = 0;
-				LT::Add(lexemTable, entryLT);
+				Add(lexemTable, entryLT);
 				
 				continue;
 			}
 
 			FST rightThesisFst(word[i], FST_RIGHTHESIS);
 			if (execute(rightThesisFst)) {
-				LT::Entry entryLT = WriteEntry(entryLT, LEX_RIGHTHESIS, LT_TI_NULLIDX, line);
+				Entry entryLT = WriteEntry(entryLT, LEX_RIGHTHESIS, LT_TI_NULLIDX, line);
 				entryLT.priority = 0;
 				
-				LT::Add(lexemTable, entryLT);
+				Add(lexemTable, entryLT);
 				continue;
 			}
 
 			FST equalFst(word[i], FST_EQUAL);
 			if (execute(equalFst)) {
-				LT::Entry entryLT = WriteEntry(entryLT, LEX_EQUAL, LT_TI_NULLIDX, line);
-				LT::Add(lexemTable, entryLT);
+				Entry entryLT = WriteEntry(entryLT, LEX_EQUAL, LT_TI_NULLIDX, line);
+				Add(lexemTable, entryLT);
 				continue;
 			}
 

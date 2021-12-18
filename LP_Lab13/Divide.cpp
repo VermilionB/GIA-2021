@@ -9,13 +9,13 @@ char** divide(char source[], int size)
 
 	bool findSeparator, findLit = false;
 	int j = 0;
-	char separators[] = { " ,;(){}[]=+-*/|" };
+	char separators[] = { ",;(){}[]=+-*/|\t " };
 	for (int i = 0, k = 0; i < size - 1; i++, k++) {
 		findSeparator = false;
 		if (source[i] == '\'') findLit = !findLit;
 		for (int t = 0; t < sizeof(separators) - 1; t++) {
-			if (source[i] == separators[t] || source[i] == '\t' && !findLit) {
-				findSeparator = true;
+			if (source[i] == separators[t] && !findLit) {
+			findSeparator = true;
 				if (word[j][0] != NULL) {
 					word[j++][k] = '\0';
 					k = 0;

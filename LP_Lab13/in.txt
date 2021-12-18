@@ -1,28 +1,21 @@
 #uselib_math
 
+
 ubyte function f[ubyte a, ubyte b]{
-    describe ubyte av;
-	av = a * g - 180 / b;
+    describe ubyte av = 1;
+    av = _random[a,b];
     give av;
 };
 
-ubyte function fi[]{
-    describe str s = 'Результат = ';
-	speakfn s;
-	give 0;
-};
-
-
 main{
     describe ubyte res;
-    describe ubyte g;
-	describe str newr;
-	
-	newr = fi[];
-    g = f[135,15];
-    speakfn g;
-    describe ubyte pro = 4;
-    res = pro << 4;
-    speak res;
+    describe ubyte fromf;
+    circuit[9]{
+        fromf = f[2,10];
+        speak 'result = ';
+        speakfn fromf;
+    };
+    fromf = 10-11;
+    speakfn fromf;
     give res;
 };

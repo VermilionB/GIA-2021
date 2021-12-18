@@ -1,0 +1,15 @@
+ubyte function f[ubyte a, ubyte b]{
+    describe ubyte av = a + b;
+    give av;
+};
+
+main{
+    describe ubyte res;
+    describe ubyte g;
+    g = f[135,175];
+    speak gg;
+    describe ubyte pro = 4;
+    res = pro << 4;
+    speak res;
+    give res;
+};
