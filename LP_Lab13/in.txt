@@ -10,11 +10,20 @@ ubyte function f[ubyte a, ubyte b]{
 main{
     describe ubyte res;
     describe ubyte fromf;
-    circuit[9]{
+    describe ubyte fu;
+    fu = _random[6,20];
+    speakfn fu;
+    provided(fu > 10){
+        speakfn 'right';
+    }
+    else{
+        speakfn 'left';
+    };
+    circuit[fu]{
         fromf = f[2,10];
         speak 'result = ';
         speakfn fromf;
-    };
+    }end;
     fromf = 10-11;
     speakfn fromf;
     give res;

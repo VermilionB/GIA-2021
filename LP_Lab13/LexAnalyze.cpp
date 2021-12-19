@@ -14,8 +14,8 @@
 #define SHIFTR		">>"
 #define MORE		'>'
 #define LESS		'<'
-#define EQU			'~'
-#define NEQU		'!'
+#define EQU			"=="
+#define NEQU		"!="
 #define EQUAL		'='
 
 using namespace fst;
@@ -151,6 +151,27 @@ namespace Lex {
 			FST circuitFst(word[i], FST_CIRCUIT);
 			if (execute(circuitFst)) {
 				Entry entryLT = WriteEntry(entryLT, LEX_CIRCUIT, LT_TI_NULLIDX, line);
+				Add(lexemTable, entryLT);
+				is_circuit++;
+				continue;
+			}
+
+			FST endFst(word[i], FST_END);
+			if (execute(endFst)) {
+				Entry entryLT = WriteEntry(entryLT, LEX_END, LT_TI_NULLIDX, line);
+				Add(lexemTable, entryLT);
+				continue;
+			}
+			FST providedFst(word[i], FST_PROVIDED);
+			if(execute(providedFst)) {
+				Entry entryLT = WriteEntry(entryLT, LEX_PROVIDED, LT_TI_NULLIDX, line);
+				Add(lexemTable, entryLT);
+				is_circuit++;
+				continue;
+			}
+			FST elseFst(word[i], FST_ELSE);
+			if (execute(elseFst)) {
+				Entry entryLT = WriteEntry(entryLT, LEX_ELSE, LT_TI_NULLIDX, line);
 				Add(lexemTable, entryLT);
 				is_circuit++;
 				continue;
@@ -409,37 +430,52 @@ namespace Lex {
 				std::map <std::string, int> mapping;
 				mapping[SHIFTL] = 1;
 				mapping[SHIFTR] = 2;
+				mapping[EQU] = 3;
+				mapping[NEQU] = 4;
+
 				switch (mapping[word[i]]) {
 				case 1:
 					entryLT.priority = 1;
-					entryLT.ops = LT::operations::OSHIFTL;
+					entryLT.ops = operations::OSHIFTL;
 					break;
 				case 2:
 					entryLT.priority = 1;
-					entryLT.ops = LT::operations::OSHIFTR;
+					entryLT.ops = operations::OSHIFTR;
+					break;
+				case 3:
+					entryLT.priority = 0;
+					entryLT.ops = operations::OEQU;
+					break;
+				case 4:
+					entryLT.priority = 0;
+					entryLT.ops = operations::ONEQU;
 					break;
 				}
 				
 				switch (word[i][0]) {
-				case EQU:
-					entryLT.priority = 0;
-					entryLT.ops = LT::operations::OEQU;
-					break;
 				case PLUS:
 					entryLT.priority = 2;
-					entryLT.ops = LT::operations::OPLUS;
+					entryLT.ops = operations::OPLUS;
 					break;
 				case MINUS:
 					entryLT.priority = 2;
-					entryLT.ops = LT::operations::OMINUS;
+					entryLT.ops = operations::OMINUS;
 					break;
 				case DIRSLASH:
 					entryLT.priority = 3;
-					entryLT.ops = LT::operations::ODIV;
+					entryLT.ops = operations::ODIV;
 					break;
 				case STAR:
 					entryLT.priority = 3;
-					entryLT.ops = LT::operations::OMUL;
+					entryLT.ops = operations::OMUL;
+					break;
+				case MORE:
+					entryLT.priority = 0;
+					entryLT.ops = operations::OMORE;
+					break;
+				case LESS:
+					entryLT.priority = 0;
+					entryLT.ops = operations::OLESS;
 					break;
 				}
 				Add(lexemTable, entryLT);

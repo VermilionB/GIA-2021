@@ -167,6 +167,30 @@ using namespace fst;
 	NODE(1, RELATION('t', 7)),\
 	NODE()
 
+#define FST_END 4,	\
+	NODE(1, RELATION('e', 1)),\
+	NODE(1, RELATION('n', 2)),\
+	NODE(1, RELATION('d', 3)),\
+	NODE()
+
+#define FST_PROVIDED 9,	\
+	NODE(1, RELATION('p', 1)),\
+	NODE(1, RELATION('r', 2)),\
+	NODE(1, RELATION('o', 3)),\
+	NODE(1, RELATION('v', 4)),\
+	NODE(1, RELATION('i', 5)),\
+	NODE(1, RELATION('d', 6)),\
+	NODE(1, RELATION('e', 7)),\
+	NODE(1, RELATION('d', 8)),\
+	NODE()
+
+#define FST_ELSE 5,	\
+	NODE(1, RELATION('e', 1)),\
+	NODE(1, RELATION('l', 2)),\
+	NODE(1, RELATION('s', 3)),\
+	NODE(1, RELATION('e', 4)),\
+	NODE()
+
 #define FST_STRINGLIB 12,	\
 	NODE(1, RELATION('#', 1)),\
 	NODE(1, RELATION('u', 2)),\

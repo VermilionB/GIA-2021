@@ -13,3 +13,39 @@ main{
     speak res;
     give res;
 };
+
+
+
+
+
+
+
+#uselib_math
+
+
+ubyte function f[ubyte a, ubyte b]{
+    describe ubyte av = 1;
+    av = _random[a,b];
+    give av;
+};
+
+main{
+    describe ubyte res;
+    describe ubyte fromf;
+    describe ubyte fu;
+    fu = _random[6,20];
+    provided(fu > 10){
+        speakfn 'right';
+    }
+    else{
+        speakfn 'left';
+    };
+    circuit[fu]{
+        fromf = f[2,10];
+        speak 'result = ';
+        speakfn fromf;
+    }end;
+    fromf = 10-11;
+    speakfn fromf;
+    give res;
+};

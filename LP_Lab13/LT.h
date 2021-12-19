@@ -29,6 +29,9 @@
 #define LEX_SHIFT 'v'
 #define LEX_CIRCUIT	'c'
 #define LEX_END	'e'
+#define LEX_PROVIDED 'u'
+#define LEX_ELSE 'o'
+
 
 #define LEX_OPERATOR 'v'
 #define LEX_EQUAL '='
@@ -43,7 +46,9 @@ namespace LT {
 		OSHIFTL,
 		OSHIFTR,
 		OEQU,
-		ONEQU
+		ONEQU,
+		OMORE,
+		OLESS
 	};
 
 	struct Entry {

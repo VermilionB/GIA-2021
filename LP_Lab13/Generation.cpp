@@ -86,11 +86,13 @@ namespace Gen {
 			circuit_body = string(),
 			func_name = string();
 		bool flag_function = false,
-			flag_ret = false,
+			flag_give = false,
 			flag_body = false,
-			flag_then = false,
+			flag_provided = false,
 			flag_callfunction = false,
+			flag_else = false,
 			flag_condition = false,
+			flag_then = false,
 			flag_circuit = false;
 
 		int result_position;
@@ -235,32 +237,32 @@ namespace Gen {
 					out << idT.table[lexT.table[i + 1].idxTI].id << "\n";
 				if (flag_function) {
 					out << "\tjmp local" << num_of_ret << "\n";
-					flag_ret = true;
+					flag_give = true;
 				}
 				if (flag_body) {
 					out << "\t\tjmp theend\n";
-					flag_ret = true;
+					flag_give = true;
 				}
 				break;
 
 			case LEX_BRACELET:
-				if (flag_body && !flag_then && /*!flag_else && */!flag_function && !flag_circuit) {
-					if (flag_ret) {
+				if (flag_body && !flag_then && !flag_else && !flag_function && !flag_circuit) {
+					if (flag_give) {
 						out << "theend:\n";
-						flag_ret = false;
+						flag_give = false;
 					}
 					out << "\tcall ExitProcess\nmain ENDP\nend main";
 				}
-				if (flag_function && !flag_then &&/* !flag_else &&*/ !flag_circuit) {
-					if (flag_ret) {
+				if (flag_function && !flag_then && !flag_else && !flag_circuit) {
+					if (flag_give) {
 						out << "local" << num_of_ret++ << ":\n";
 						out << "\tpop eax\n\tret\n";
-						flag_ret = false;
+						flag_give = false;
 					}
 					out << func_name << " ENDP\n\n";
 					flag_function = false;
 				}
-				/*if (flag_then) {
+				if (flag_then) {
 					flag_then = false;
 					if (flag_else) {
 						out << "\tjmp e" << num_of_ends << "\n";
@@ -271,12 +273,6 @@ namespace Gen {
 				if (flag_else) {
 					flag_else = false;
 					out << "e" << num_of_ends++ << ":\n";
-				}*/
-				if (flag_circuit) {
-					out << circuit_body << "cyclenext" << num_of_cycles << ":\n";
-					circuit_body.clear();
-					num_of_cycles++;
-					flag_circuit = false;
 				}
 				break;
 
@@ -290,36 +286,64 @@ namespace Gen {
 
 			case LEX_END:
 				if (flag_circuit) {
-					out << circuit_body << "sub ebx, 1\ncmp ebx, 0\njz endcycle" << num_of_cycles << "\nloop cyclenext" << num_of_cycles << "\nendcycle" << num_of_cycles << ":\n";
+					out << circuit_body << "\tsub ebx, 1\n\tcmp ebx, 0\n\tjz endcycle" << num_of_cycles << "\n\tloop cyclenext" << num_of_cycles << "\n\tendcycle" << num_of_cycles << ":\n";
 					circuit_body.clear();
 					num_of_cycles++;
 					flag_circuit = false;
 				}
 				break;
 
-			case LEX_LEFTSQ:
-				if (flag_condition) {
-					circuit_body = "\tmov eax, " + string((char*)idT.table[lexT.table[i + 1].idxTI].id) + "\n" +
-							"\tcmp eax, " + string((char*)idT.table[lexT.table[i + 3].idxTI].id) + "\n";
+			case LEX_LEFTHESIS:
+				if (flag_provided) {
+					if (idT.table[lexT.table[i + 1].idxTI].iddatatype == IT::BOOL && lexT.table[i + 2].lexema == LEX_RIGHTHESIS) {
+						out << "\tmov eax, " << idT.table[lexT.table[i + 1].idxTI].id << "\n";
+						out << "\tcmp eax, 1\n";
+						out << "\tjz m" << num_of_points << "\n";
+						out << "\tjnz m" << num_of_points + 1 << "\n";
+					}
+					else {
 						out << "\tmov eax, " << idT.table[lexT.table[i + 1].idxTI].id << "\n";
 						out << "\tcmp eax, " << idT.table[lexT.table[i + 3].idxTI].id << "\n";
 
-						if (lexT.table[i + 2].ops == LT::OEQU) {
-							circuit_body += "\tjz cycle" + to_string(num_of_cycles) + "\n";
-							out << "\tjz cycle" << num_of_cycles << "\n";
+						if (lexT.table[i + 2].ops == LT::OMORE) {
+							out << "\tjg m" << num_of_points << "\n";
+							out << "\tjl m" << num_of_points + 1 << "\n";
+						}
+						else if (lexT.table[i + 2].ops == LT::OLESS) {
+							out << "\tjl m" << num_of_points << "\n";
+							out << "\tjg m" << num_of_points + 1 << "\n";
+						}
+						else if (lexT.table[i + 2].ops == LT::OEQU) {
+							out << "\tjz m" << num_of_points << "\n";
+							out << "\tjnz m" << num_of_points + 1 << "\n";
 						}
 						else if (lexT.table[i + 2].ops == LT::ONEQU) {
-							circuit_body += "\tjnz cycle" + to_string(num_of_cycles) + "\n";
-							out << "\tjnz cycle" << num_of_cycles << "\n";
+							out << "\tjnz m" << num_of_points << "\n";
+							out << "\tjz m" << num_of_points + 1 << "\n";
 						}
-					out << "\tjmp cyclenext" << num_of_cycles << "\n";
+					}
+					out << "\tje m" << num_of_points + 1 << "\n";
+					int j = i;
+					while (lexT.table[j++].lexema != LEX_BRACELET) {
+						if (lexT.table[j + 1].lexema == LEX_ELSE) {
+							flag_else = true;
+							break;
+						}
+					}
 				}
+
+			case LEX_PROVIDED:
+				flag_provided = true;
 				break;
 
-			case LEX_RIGHTSQ:
-				if (lexT.table[i + 1].lexema == LEX_LEFTBRACE && flag_condition) {
-					out << "cycle" << num_of_cycles << ":\n";
-					flag_condition = false;
+			case LEX_ELSE:
+				flag_else = true;
+				break;
+			case LEX_RIGHTHESIS:
+				if (lexT.table[i + 1].lexema == LEX_LEFTBRACE && flag_provided) {
+					flag_then = true;
+					out << "m" << num_of_points++ << ":\n";
+					flag_provided = false;
 				}
 				break;
 
