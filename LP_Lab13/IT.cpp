@@ -36,12 +36,12 @@ namespace IT {
 		delete[] idtable.table;
 	}
 
-	void ShowTable(IdTable& idtable) {
+	void ShowTable(IdTable& idtable, std::ostream& out) {
 		int i, j, numberOP = 0;
-		cout << setfill('-') << setw(87) << '-' << endl;
-		cout << "   #" << " | " << "Идентификатор" << " | " << "Тип данных" << " | " << "Тип идентификатора"
+		out << setfill('-') << setw(87) << '-' << endl;
+		out << "   #" << " | " << "Идентификатор" << " | " << "Тип данных" << " | " << "Тип идентификатора"
 			<< " | " << "Индекс в ТЛ" << " | " << "Значение" << endl;
-		cout << setw(87) << '-' << endl;
+		out << setw(87) << '-' << endl;
 
 		for (i = 0, j = 0; i < idtable.size; i++, j++) {
 			if (idtable.table[i].idtype == OP) {
@@ -49,56 +49,56 @@ namespace IT {
 				j--;
 				continue;
 			}
-			cout << setfill('0') << setw(4) << right << j << " | ";
-			cout << setfill(' ') << setw(13) << left << idtable.table[i].id << " | ";
+			out << setfill('0') << setw(4) << right << j << " | ";
+			out << setfill(' ') << setw(13) << left << idtable.table[i].id << " | ";
 
 			switch (idtable.table[i].iddatatype) {
 			case BOOL:
-				cout << setw(10) << left;
-				if (idtable.table[i].iddatatype == OP) cout << "-" << " | ";
-				else cout << "boolean" << " | ";
+				out << setw(10) << left;
+				if (idtable.table[i].iddatatype == OP) out << "-" << " | ";
+				else out << "boolean" << " | ";
 				break;
 			case UBYTE:
-				cout << setw(10) << left;
-				if (idtable.table[i].iddatatype == OP) cout << "-" << " | ";
-				else cout << "ubyte" << " | ";
+				out << setw(10) << left;
+				if (idtable.table[i].iddatatype == OP) out << "-" << " | ";
+				else out << "ubyte" << " | ";
 				break;
 			case STR:
-				cout << setw(10) << left;
-				if (idtable.table[i].idtype == OP) cout << "-" << " | ";
-				cout << "str" << " | ";
+				out << setw(10) << left;
+				if (idtable.table[i].idtype == OP) out << "-" << " | ";
+				out << "str" << " | ";
 				break;
 			default:
-				cout << setw(10) << left << "unknown" << " | ";
+				out << setw(10) << left << "unknown" << " | ";
 				break;
 			}
 
 			switch (idtable.table[i].idtype) {
-			case V: cout << setw(18) << left << "переменная" << " | "; break;
-			case F: cout << setw(18) << left << "функция" << " | "; break;
-			case P: cout << setw(18) << left << "параметр" << " | "; break;
-			case L: cout << setw(18) << left << "литерал" << " | "; break;
+			case V: out << setw(18) << left << "переменная" << " | "; break;
+			case F: out << setw(18) << left << "функция" << " | "; break;
+			case P: out << setw(18) << left << "параметр" << " | "; break;
+			case L: out << setw(18) << left << "литерал" << " | "; break;
 			case OP:
-				cout << setw(18) << left << "оператор" << " | ";
+				out << setw(18) << left << "оператор" << " | ";
 				numberOP++;
 				break;
-			default: cout << setw(18) << left << "unknown" << " | "; break;
+			default: out << setw(18) << left << "unknown" << " | "; break;
 			}
-			cout << setw(11) << left << idtable.table[i].idxFirstLE << " | ";
+			out << setw(11) << left << idtable.table[i].idxFirstLE << " | ";
 
 			if (idtable.table[i].iddatatype == UBYTE && (idtable.table[i].idtype == V || idtable.table[i].idtype == L))
-				cout << setw(18) << left << idtable.table[i].value.vint;
+				out << setw(18) << left << idtable.table[i].value.vint;
 			else if (idtable.table[i].iddatatype == STR && (idtable.table[i].idtype == V || idtable.table[i].idtype == L))
-				cout << "[" << idtable.table[i].value.vstr.len << "]\"" << idtable.table[i].value.vstr.str << "\"";
+				out << "[" << idtable.table[i].value.vstr.len << "]\"" << idtable.table[i].value.vstr.str << "\"";
 			else if (idtable.table[i].iddatatype == BOOL && (idtable.table[i].idtype == V || idtable.table[i].idtype == L)) {
-				cout << setw(18) << left << idtable.table[i].value.vbool;
+				out << setw(18) << left << idtable.table[i].value.vbool;
 			}
-			else cout << "-";
-			cout << endl;
+			else out << "-";
+			out << endl;
 		}
 
-		cout << setfill('-') << setw(87) << "-" << endl;
-		cout << "Количество идентификаторов: " << i - numberOP << endl;
-		cout << setw(87) << "-" << endl;
+		out << setfill('-') << setw(87) << "-" << endl;
+		out << "Количество идентификаторов: " << i - numberOP << endl;
+		out << setw(87) << "-" << endl;
 	}
 }

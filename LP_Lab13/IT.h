@@ -43,5 +43,5 @@ namespace IT {
 	int IsId(IdTable& idtable, char id[ID_MAXSIZE]);
 
 	void Delete(IdTable& idtable);
-	void ShowTable(IdTable& idtable);
+	void ShowTable(IdTable& idtable, std::ostream& out);
 }

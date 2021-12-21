@@ -404,7 +404,7 @@ namespace Lex {
 			if (execute(literalUbyteFst)) {
 				int value = atoi((char*)word[i]);
 				if (value > 255 || value < 0) {
-					Log::WriteError(log, Error::geterrorin(113, line, -1));
+					Log::WriteError(log, Error::geterrorin(206, line, -1));
 				}
 				
 				for (int k = 0; k < idtable.size; k++) {
@@ -443,7 +443,7 @@ namespace Lex {
 				int value = strtol(numBuf, NULL, 16);
 				
 				if (value > 255 || value < 0) {
-					Log::WriteError(log, Error::geterrorin(113, line, -1));
+					Log::WriteError(log, Error::geterrorin(206, line, -1));
 				}
 
 				for (int k = 0; k < idtable.size; k++) {

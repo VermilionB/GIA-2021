@@ -41,7 +41,7 @@ int wmain(int argc, wchar_t* argv[])
 			exit(-1);
 		}
 
-		IT::ShowTable(lex.idtable);
+		IT::ShowTable(lex.idtable, *log.stream);
 		Synchronize(lex);
 
 		PolishStart(lex);
