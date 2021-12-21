@@ -33,7 +33,7 @@ extern "C" {
 	}
 
 	int _strlen(char* ptr) {
-		return strlen(ptr);
+		return strlen(ptr) < 255 ? strlen(ptr) : 255;
 	}
 
 	char* _strcopy(char* s1, char* s2) {

@@ -42,7 +42,14 @@ using namespace fst;
 	NODE(10,	\
 	RELATION('1', 0), RELATION('2', 0), RELATION('3', 0), RELATION('4', 0), RELATION('5', 0),\
     RELATION('6', 0), RELATION('7', 0), RELATION('8', 0), RELATION('9', 0), RELATION('0', 0))
-	
+
+#define FST_UBLITHEX 2,	\
+	NODE(17,	\
+	RELATION('1', 0), RELATION('2', 0), RELATION('3', 0), RELATION('4', 0), RELATION('5', 0), RELATION('6', 0),\
+	RELATION('7', 0), RELATION('8', 0), RELATION('9', 0), RELATION('0', 0), RELATION('a', 0), RELATION('b', 0), \
+	RELATION('c', 0), RELATION('d', 0), RELATION('e', 0), RELATION('f', 0), RELATION('h', 1)),\
+	NODE()
+
 #define FST_STRLIT 3,	\
 	NODE(1, RELATION('\'', 1)),\
 	NODE(154, \
@@ -155,6 +162,23 @@ using namespace fst;
 
 #define FST_EQUAL 2,	\
 	NODE(1, RELATION('=', 1)),\
+	NODE()
+
+#define FST_GREATER 8,	\
+	NODE(1, RELATION('g', 1)),\
+	NODE(1, RELATION('r', 2)),\
+	NODE(1, RELATION('e', 3)),\
+	NODE(1, RELATION('a', 4)),\
+	NODE(1, RELATION('t', 5)),\
+	NODE(1, RELATION('e', 6)),\
+	NODE(1, RELATION('r', 7)),\
+	NODE()
+
+#define FST_LESS 5,	\
+	NODE(1, RELATION('l', 1)),\
+	NODE(1, RELATION('e', 2)),\
+	NODE(1, RELATION('s', 3)),\
+	NODE(1, RELATION('s', 4)),\
 	NODE()
 
 #define FST_CIRCUIT 8,	\

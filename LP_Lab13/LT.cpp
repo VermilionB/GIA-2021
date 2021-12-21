@@ -9,7 +9,7 @@ using namespace std;
 namespace LT {
 	LexTable Create(int size) {
 		LexTable* newLexTable = new LexTable;
-		if (size > LT_MAXSIZE) throw ERROR_THROW(120);
+		if (size > LT_MAXSIZE) throw ERROR_THROW(201);
 		newLexTable->maxsize = size;
 		newLexTable->size = 0;
 		newLexTable->table = new Entry[size];
@@ -17,7 +17,7 @@ namespace LT {
 	}
 
 	void Add(LexTable& lextable, Entry entry) {
-		if (lextable.size + 1 > lextable.maxsize) throw ERROR_THROW(121);
+		if (lextable.size + 1 > lextable.maxsize) throw ERROR_THROW(202);
 		lextable.table[lextable.size] = entry;
 		lextable.size++;
 	}

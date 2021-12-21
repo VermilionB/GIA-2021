@@ -1,7 +1,27 @@
 #uselib_math
+#uselib_str
 
+ubyte function func[ubyte g]
+{
+    describe boolean bi = true;
+    provided(g greater 5){
+        bi = true;
+    }
+    else{
+        bi = false;
+    };
+    provided(bi){
+        speakfn 'rand value is bigger then 5';
+    }
+    else{
+        speakfn 'rand value is lower than 5';
+    };
+    speakfn 2eh;
+    give 0;
+};
 
 ubyte function f[ubyte a, ubyte b]{
+    describe boolean bi;
     describe ubyte av = 1;
     av = _random[a,b];
     give av;
@@ -10,21 +30,39 @@ ubyte function f[ubyte a, ubyte b]{
 main{
     describe ubyte res;
     describe ubyte fromf;
-    describe ubyte fu;
-    fu = _random[6,20];
-    speakfn fu;
-    provided(fu > 10){
+    describe ubyte fi;
+    describe ubyte l;
+    describe str strok = 'aaaaaaaaaa';
+    l = _strlen[strok];
+    describe str lel = 'aaagh';
+    strok = _strcopy[strok, lel];
+    speakfn strok;
+    speak 'Length of str: ';
+    speakfn l;
+    fi = _random[6,20];
+    fromf = _exp[2,9];
+    speakfn fromf;
+    fromf = 1 << 3;
+    speakfn fromf;
+    speakfn fi;
+    provided(fi greater 10){
         speakfn 'right';
     }
     else{
         speakfn 'left';
     };
-    circuit[fu]{
-        fromf = f[2,10];
-        speak 'result = ';
-        speakfn fromf;
+    circuit[fi]{
+        provided(l > 6){
+            fromf = f[2,10];
+            speak 'result = ';
+            speakfn fromf;
+        }
+        else{
+            speakfn 'unlooka';
+        };
     }end;
-    fromf = 10-11;
-    speakfn fromf;
-    give res;
+    describe ubyte gh = func[6];
+    speak 'func ret: ';
+    speakfn gh;
+    give 0;
 };

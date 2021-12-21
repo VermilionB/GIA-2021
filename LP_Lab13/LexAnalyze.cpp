@@ -12,8 +12,8 @@
 #define DIRSLASH	'/'
 #define SHIFTL		"<<"
 #define SHIFTR		">>"
-#define MORE		'>'
-#define LESS		'<'
+#define MORE		"greater"
+#define LESS		"less"
 #define EQU			"=="
 #define NEQU		"!="
 #define EQUAL		'='
@@ -199,7 +199,7 @@ namespace Lex {
 			if (execute(strlenFst) && findStrLib) {
 				if (int idx = IT::IsId(idtable, word[i]) == TI_NULLIDX) {
 					entryIT.idtype = IT::F;
-					entryIT.iddatatype = IT::STR;
+					entryIT.iddatatype = IT::UBYTE;
 					entryIT.idxFirstLE = indexOfLex;
 					strcpy(entryIT.id, word[i]);
 					IT::Add(idtable, entryIT);
@@ -286,6 +286,75 @@ namespace Lex {
 				Add(lexemTable, entryLT);
 				continue;
 			}
+			FST operatorFst(word[i], FST_OPERATOR);
+			FST shiftRightFst(word[i], FST_SHIFTR);
+			FST shiftLeftFst(word[i], FST_SHIFTL);
+			FST greaterFst(word[i], FST_GREATER);
+			FST lessFst(word[i], FST_LESS);
+
+			if (execute(operatorFst) || execute(shiftLeftFst) || execute(shiftRightFst) || execute(greaterFst) || execute(lessFst)) {
+				strcpy(entryIT.id, word[i]);
+				entryIT.idxFirstLE = indexOfLex;
+				entryIT.idtype = IT::OP;
+				IT::Add(idtable, entryIT);
+				Entry entryLT = WriteEntry(entryLT, LEX_OPERATOR, IT::IsId(idtable, word[i]), line);
+
+				std::map <std::string, int> mapping;
+				mapping[SHIFTL] = 1;
+				mapping[SHIFTR] = 2;
+				mapping[EQU] = 3;
+				mapping[NEQU] = 4;
+				mapping[MORE] = 5;
+				mapping[LESS] = 6;
+
+				switch (mapping[word[i]]) {
+				case 1:
+					entryLT.priority = 1;
+					entryLT.ops = operations::OSHIFTL;
+					break;
+				case 2:
+					entryLT.priority = 1;
+					entryLT.ops = operations::OSHIFTR;
+					break;
+				case 3:
+					entryLT.priority = 0;
+					entryLT.ops = operations::OEQU;
+					break;
+				case 4:
+					entryLT.priority = 0;
+					entryLT.ops = operations::ONEQU;
+					break;
+				case 5:
+					entryLT.priority = 0;
+					entryLT.ops = operations::OMORE;
+					break;
+				case 6:
+					entryLT.priority = 0;
+					entryLT.ops = operations::OLESS;
+					break;
+				}
+
+				switch (word[i][0]) {
+				case PLUS:
+					entryLT.priority = 2;
+					entryLT.ops = operations::OPLUS;
+					break;
+				case MINUS:
+					entryLT.priority = 2;
+					entryLT.ops = operations::OMINUS;
+					break;
+				case DIRSLASH:
+					entryLT.priority = 3;
+					entryLT.ops = operations::ODIV;
+					break;
+				case STAR:
+					entryLT.priority = 3;
+					entryLT.ops = operations::OMUL;
+					break;
+				}
+				Add(lexemTable, entryLT);
+				continue;
+			}
 
 			FST identifFst(word[i], FST_ID);
 			if (execute(identifFst)) {
@@ -363,6 +432,45 @@ namespace Lex {
 				continue;
 			}
 
+			FST ubyteLitHexFst(word[i], FST_UBLITHEX);
+			if (execute(ubyteLitHexFst)) {
+				char* numBuf = new char;
+				int j = 0;
+				for (int k = 0; k < strlen(word[i] - 1); k++, j++) {
+					numBuf[j] = word[i][k];
+				}
+				numBuf[strlen(numBuf) - 1] = '\0';
+				int value = strtol(numBuf, NULL, 16);
+				
+				if (value > 255 || value < 0) {
+					Log::WriteError(log, Error::geterrorin(113, line, -1));
+				}
+
+				for (int k = 0; k < idtable.size; k++) {
+					if (idtable.table[k].value.vint == value && idtable.table[k].idtype == IT::L && idtable.table[k].iddatatype == IT::UBYTE) {
+						Entry entryLT = WriteEntry(entryLT, LEX_LITERAL, k, line);
+						Add(lexemTable, entryLT);
+						findSameID = true;
+						break;
+					}
+				}
+
+				if (findSameID) continue;
+				entryIT.idtype = IT::L;
+				entryIT.iddatatype = IT::UBYTE;
+				entryIT.value.vint = value;
+				entryIT.idxFirstLE = indexOfLex;
+				_itoa_s(literalCounter++, charclit, sizeof(char) * 10, 10);
+				strcpy(bufL, lit);
+				word[i] = strcat(bufL, charclit);
+				strcpy(entryIT.id, word[i]);
+				IT::Add(idtable, entryIT);
+				Entry entryLT = WriteEntry(entryLT, LEX_LITERAL, IT::IsId(idtable, word[i]), line);
+				Add(lexemTable, entryLT);
+				entryIT = {};
+				continue;
+			}
+
 			
 			FST literalStringFst(word[i], FST_STRLIT);
 			if (execute(literalStringFst)) {
@@ -414,71 +522,6 @@ namespace Lex {
 			if (execute(mathlibFst)) {
 				libraries.push("math");
 				findMathLib = true;
-				continue;
-			}
-			FST operatorFst(word[i], FST_OPERATOR);
-			FST shiftRightFst(word[i], FST_SHIFTR);
-			FST shiftLeftFst(word[i], FST_SHIFTL);
-
-			if (execute(operatorFst) || execute(shiftLeftFst) || execute(shiftRightFst)) {
-				strcpy(entryIT.id, word[i]);
-				entryIT.idxFirstLE = indexOfLex;
-				entryIT.idtype = IT::OP;
-				IT::Add(idtable, entryIT);
-				Entry entryLT = WriteEntry(entryLT, LEX_OPERATOR, IT::IsId(idtable, word[i]), line);
-
-				std::map <std::string, int> mapping;
-				mapping[SHIFTL] = 1;
-				mapping[SHIFTR] = 2;
-				mapping[EQU] = 3;
-				mapping[NEQU] = 4;
-
-				switch (mapping[word[i]]) {
-				case 1:
-					entryLT.priority = 1;
-					entryLT.ops = operations::OSHIFTL;
-					break;
-				case 2:
-					entryLT.priority = 1;
-					entryLT.ops = operations::OSHIFTR;
-					break;
-				case 3:
-					entryLT.priority = 0;
-					entryLT.ops = operations::OEQU;
-					break;
-				case 4:
-					entryLT.priority = 0;
-					entryLT.ops = operations::ONEQU;
-					break;
-				}
-				
-				switch (word[i][0]) {
-				case PLUS:
-					entryLT.priority = 2;
-					entryLT.ops = operations::OPLUS;
-					break;
-				case MINUS:
-					entryLT.priority = 2;
-					entryLT.ops = operations::OMINUS;
-					break;
-				case DIRSLASH:
-					entryLT.priority = 3;
-					entryLT.ops = operations::ODIV;
-					break;
-				case STAR:
-					entryLT.priority = 3;
-					entryLT.ops = operations::OMUL;
-					break;
-				case MORE:
-					entryLT.priority = 0;
-					entryLT.ops = operations::OMORE;
-					break;
-				case LESS:
-					entryLT.priority = 0;
-					entryLT.ops = operations::OLESS;
-					break;
-				}
-				Add(lexemTable, entryLT);
 				continue;
 			}
 
@@ -563,12 +606,12 @@ namespace Lex {
 				continue;
 			}
 
-			throw ERROR_THROW_IN(208, line, position);
+			throw ERROR_THROW_IN(205, line, position);
 		}
 
 
-		if (!findMain) throw ERROR_THROW(2);
-		if (countOfMain > 1) throw ERROR_THROW(700);
+		if (!findMain) throw ERROR_THROW(302);
+		if (countOfMain > 1) throw ERROR_THROW(301);
 
 		lex.idtable = idtable;
 		lex.lextable = lexemTable;

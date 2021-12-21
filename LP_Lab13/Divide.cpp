@@ -9,7 +9,7 @@ char** divide(char source[], int size)
 
 	bool findSeparator, findLit = false;
 	int j = 0;
-	char separators[] = { ",;(){}[]=+-*/|<>=!\t " };
+	char separators[] = { " ,;(){}[]=+-*/|\t" };
 	for (int i = 0, k = 0; i < size - 1; i++, k++) {
 		findSeparator = false;
 		if (source[i] == '\'') findLit = !findLit;

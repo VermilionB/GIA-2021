@@ -29,7 +29,7 @@ namespace Gen {
 				out << "EXTRN _random: proc\n";
 				out << "EXTRN _exp: proc\n";
 			}
-			else if (libs.top() == "string") {
+			else if (libs.top() == "str") {
 				out << "EXTRN _strlen: proc\n";
 				out << "EXTRN _strcopy: proc\n";
 			}
@@ -110,7 +110,7 @@ namespace Gen {
 						if (idT.table[lexT.table[i].idxTI].iddatatype == IT::UBYTE || idT.table[lexT.table[i].idxTI].iddatatype == IT::BOOL)
 							out << "DWORD";
 						else
-							out << "BYTE";
+							out << "DWORD";
 					}
 
 					if (lexT.table[i].lexema == LEX_COMMA)
@@ -181,10 +181,12 @@ namespace Gen {
 							break;
 						case LT::OSHIFTL:
 							out << " \tpop eax \n ";
+							out << " \tpop eax \n ";
 							out << " \tshl eax,  " << idT.table[lexT.table[i - 1].idxTI].value.vint << "\n";
 							out << " \tpush eax \n ";
 							break;
 						case LT::OSHIFTR:
+							out << " \tpop eax \n ";
 							out << " \tpop eax \n ";
 							out << " \tshr eax,  " << idT.table[lexT.table[i - 1].idxTI].value.vint << "\n";
 							out << " \tpush eax \n ";

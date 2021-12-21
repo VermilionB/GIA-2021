@@ -33,21 +33,13 @@ int wmain(int argc, wchar_t* argv[])
 
 		LEX lex = LexAnalyze(log, in, libraries);
 
+		MFST::SyntaxAnalyze(lex, log, *log.stream);
 
-		MFST_TRACE_START
-			unsigned int start_time = clock();
-		MFST::Mfst mfst(lex.lextable, GRBH::getGreibach());
-		mfst.start();
-		unsigned int end_time = clock();
-		unsigned int search_time = end_time - start_time;
-		std::cout << search_time << std::endl;
-		mfst.savededucation();
-		mfst.printrules();
 
-		/*if (!Semantic::Analyze(lex, log)) {
+		if (Semantic::SemAnalyze(lex, log) == 0) {
 			std::cout << "Semantic errors. Check log to get more info";
 			exit(-1);
-		}*/
+		}
 
 		IT::ShowTable(lex.idtable);
 		Synchronize(lex);

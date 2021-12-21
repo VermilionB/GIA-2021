@@ -4,5 +4,5 @@
 #include "LexAnalyze.h"
 
 namespace Semantic {
-	bool Analyze(Lex::LEX lex, Log::LOG log);
+	bool SemAnalyze(Lex::LEX lex, Log::LOG log);
 }
