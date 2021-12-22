@@ -2,7 +2,7 @@
 .model flat, stdcall
 includelib libucrt.lib
 includelib kernel32.lib
-includelib ../Debug/StaticLib.lib
+includelib "D:/свеаю 3 яел/YAP/GIA-2021/Debug/StaticLib.lib"
 ExitProcess PROTO :DWORD
 
 EXTRN _strlen: proc
