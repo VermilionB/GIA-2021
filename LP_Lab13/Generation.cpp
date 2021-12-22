@@ -21,7 +21,7 @@ namespace Gen {
 
 		out << "includelib libucrt.lib\n";
 		out << "includelib kernel32.lib\n";
-		out << "includelib \"D:/свеаю 3 яел/YAP/GIA-2021/Debug/StaticLib.lib\"\n";
+		out << "includelib "../Debug/StaticLib.lib"\n";
 		out << "ExitProcess PROTO :DWORD\n\n";
 
 		while (!libs.empty()) {
