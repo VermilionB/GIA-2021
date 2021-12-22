@@ -31,10 +31,10 @@ namespace Lex {
 			word[i] = new char[size_word] {NULL};
 
 		do {
-			word = divide(in.text, in.size);
+			word = divide(in.text, in.size, log);
 		} while (word == NULL);
 
-
+		
 		for (int i = 0; word[i]; i++) {
 			cout << word[i];
 		}
@@ -475,6 +475,9 @@ namespace Lex {
 			FST literalStringFst(word[i], FST_STRLIT);
 			if (execute(literalStringFst)) {
 				int length = strlen(word[i]);
+				if (length > 255) {
+					Log::WriteError(log, Error::geterrorin(207, line, -1));
+				}
 				for (int k = 0; k < length; k++)
 					word[i][k] = word[i][k + 1];
 				word[i][length - 2] = 0;

@@ -42,7 +42,7 @@ main{
     };
     circuit[fu]{
         fromf = f[2,10];
-        speak 'result = ';
+        speak 'result = ;
         speakfn fromf;
     }end;
     fromf = 10-11;

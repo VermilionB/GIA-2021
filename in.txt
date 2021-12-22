@@ -14,7 +14,7 @@ ubyte function func[ubyte g]
         speakfn 'rand value is bigger then 5';
     }
     else{
-        speakfn 'rand value is lower than 5 ';
+        speakfn 'rand value is lower than 5';
     };
     speakfn 2eh;
     give 0;
@@ -32,7 +32,7 @@ main{
     describe ubyte fromf;
     describe ubyte fi;
     describe ubyte l;
-    describe str strok = 'aaaaa';
+    describe str strok = 'aaaaaaaaaa';
     l = _strlen[strok];
     describe str lel = 'aaagh';
     strok = _strcopy[strok, lel];
@@ -61,7 +61,7 @@ main{
             speakfn 'unlooka';
         };
     }end;
-    describe ubyte gh = func['a'];
+    describe ubyte gh = func[6];
     speak 'func ret: ';
     speakfn gh;
     give 0;

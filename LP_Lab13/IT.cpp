@@ -5,7 +5,7 @@ using namespace std;
 
 namespace IT {
 	IdTable Create(int size) {
-		IdTable* table = new IdTable;
+	    IdTable* table = new IdTable;
 		if (size < TI_MAXSIZE) throw ERROR_THROW(203);
 		table->maxsize = size;
 		table->size = 0;

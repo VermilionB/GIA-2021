@@ -22,25 +22,24 @@ EXTRN StrOutLn: proc
 	Lit2 DD 5
 	Lit3 DD 0
 	Lit4 BYTE "rand value is bigger then 5", 0
-	Lit5 BYTE "rand value is lower than 5 ", 0
+	Lit5 BYTE "rand value is lower than 5", 0
 	Lit6 DD 46
 	Lit7 DD 0
 	Lit8 DD 1
-	Lit9 BYTE "aaaaa", 0
+	Lit9 BYTE "aaaaaaaaaa", 0
 	Lit10 BYTE "aaagh", 0
 	Lit11 BYTE "Length of str: ", 0
 	Lit12 DD 6
 	Lit13 DD 20
-	Lit14 BYTE "a", 0
+	Lit14 DD 2
 	Lit15 DD 9
 	Lit16 DD 3
 	Lit17 DD 10
 	Lit18 BYTE "right", 0
 	Lit19 BYTE "left", 0
-	Lit20 DD 2
-	Lit21 BYTE "result = ", 0
-	Lit22 BYTE "unlooka", 0
-	Lit23 BYTE "func ret: ", 0
+	Lit20 BYTE "result = ", 0
+	Lit21 BYTE "unlooka", 0
+	Lit22 BYTE "func ret: ", 0
 
 .data
 	buffer BYTE 256 dup(0)
@@ -149,12 +148,12 @@ main PROC
 	call _random
 	push eax
 	pop mainfi
-	push offset Lit14
+	push Lit14
 	push Lit15
 	pop edx
 	pop edx
 	push Lit15
-	push offset Lit14
+	push Lit14
 	call _exp
 	push eax
 	pop mainfromf
@@ -193,22 +192,22 @@ cyclenext0:
 	jl m7
 	je m7
 m6:
-	push Lit20
+	push Lit14
 	push Lit17
 	pop edx
 	pop edx
 	push Lit17
-	push Lit20
+	push Lit14
 	call f
 	push eax
 	pop mainfromf
-	push offset Lit21
+	push offset Lit20
 	call StrOut
 	push mainfromf
 	call IntOutLn
 	jmp e3
 m7:
-	push offset Lit22
+	push offset Lit21
 	call StrOutLn
 e3:
 	sub ebx, 1
@@ -222,7 +221,7 @@ e3:
 	call func
 	push eax
 	pop maingh
-	push offset Lit23
+	push offset Lit22
 	call StrOut
 	push maingh
 	call IntOutLn

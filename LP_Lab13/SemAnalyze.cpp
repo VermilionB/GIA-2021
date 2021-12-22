@@ -74,7 +74,7 @@ namespace Semantic {
 					is_ok = false;
 				}
 				continue;
-			
+
 			case LEX_FUNCTION:
 				for (const auto& elem : functions_parm) {
 					if (elem.first == lex.idtable.table[lex.lextable.table[i + 1].idxTI].id) {
